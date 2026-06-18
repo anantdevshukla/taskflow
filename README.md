@@ -414,33 +414,6 @@ using:
 
 ---
 
-# 🚀 Getting Started
-
-## Clone Repository
-
-```bash
-git clone https://github.com/yourusername/taskflow.git
-```
-
-## Navigate
-
-```bash
-cd taskflow
-```
-
-## Run
-
-Open:
-
-```text
-index.html
-```
-
-inside any modern browser.
-
-No installation required.
-
----
 
 # 🎓 Assignment Requirements Covered
 
