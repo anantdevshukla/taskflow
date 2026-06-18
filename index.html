@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — DOM Task Manager</title>
+  <link rel="stylesheet" href="style.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+
+  <header class="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-name">TaskFlow</span>
+    </div>
+  </header>
+
+  <section class="hero-section">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-content">
+      <div class="task-form-card" id="task-form-card">
+        <div class="form-row">
+          <div class="input-group">
+            <label class="input-label" for="task-title">Task Title</label>
+            <input type="text" id="task-title" class="task-input" placeholder="What needs to be done?"
+              autocomplete="off" />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-add" id="add-task-btn">
+            <span class="btn-icon">+</span> Add Task
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="main-layout">
+
+    <section class="task-section">
+      <div class="section-header">
+        <h2 class="section-title">Tasks</h2>
+        <button class="btn-clear" id="clear-all-btn">Clear all</button>
+      </div>
+
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">◫</div>
+        <p class="empty-title">No tasks yet</p>
+        <p class="empty-sub">Add your first task above to get started.</p>
+      </div>
+
+      <div class="task-list" id="task-list"></div>
+
+      <div class="panel panel--delegation">
+        <div class="panel-header">
+          <span class="panel-badge">Concepts</span>
+          <h3 class="panel-title">Event Delegation</h3>
+        </div>
+        <p class="panel-desc">
+          Instead of attaching listeners to every task card individually, one listener can manage all tasks through event bubbling.
+        </p>
+
+        <div class="edu-flow">
+          <span class="flow-step">Task List Container</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Single Event Listener</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Detect Clicked Element</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Perform Action</span>
+        </div>
+
+        <div class="edu-grid">
+          <div class="edu-card edu-card--inefficient">
+            <span class="edu-badge edu-badge--inefficient">❌ Inefficient Approach</span>
+            <p>Attach listeners to: Task 1, Task 2, Task 3, Task 4, Task N.</p>
+            <p class="card-note">Each task has its own listener in memory.</p>
+          </div>
+          <div class="edu-card edu-card--efficient">
+            <span class="edu-badge edu-badge--efficient">✅ Better Approach</span>
+            <p>Attach ONE listener to: <code>#task-list</code></p>
+            <p class="card-note">Use <code>event.target</code> and <code>closest()</code> to determine click origin.</p>
+          </div>
+        </div>
+
+        <div class="edu-callout">
+          <h5>Key Benefits:</h5>
+          <ul>
+            <li><strong>Better performance:</strong> Only one listener registers in memory.</li>
+            <li><strong>Less memory usage:</strong> Fewer active listeners.</li>
+            <li><strong>Easier maintenance:</strong> Unified codebase handler.</li>
+            <li><strong>Dynamic elements:</strong> Automatically handles future tasks added to list.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel panel--event">
+        <div class="panel-header">
+          <span class="panel-badge">Concepts</span>
+          <h3 class="panel-title">Event Propagation</h3>
+        </div>
+        <p class="panel-desc">
+          Control how events propagate through the DOM tree. Bubbling and Capturing are two ways of propagation.
+        </p>
+
+        <div class="edu-grid">
+          <div class="edu-card edu-card--bubbling">
+            <span class="edu-badge edu-badge--bubbling">Default Browser Behavior</span>
+            <h4>Event Bubbling</h4>
+            <p class="card-desc">The event starts at the target element and moves upward through its ancestors.</p>
+            <div class="edu-example">
+              <span class="ex-label">Visual Flow:</span>
+              <code class="mono-flow">Child Button → Parent → Grandparent</code>
+              <span class="ex-label">Execution Order:</span>
+              <code class="mono-order">Child, Parent, Grandparent</code>
+            </div>
+          </div>
+
+          <div class="edu-card edu-card--capturing">
+            <span class="edu-badge edu-badge--capturing">Capture Phase</span>
+            <h4>Event Capturing</h4>
+            <p class="card-desc">The event travels from the outermost ancestor down toward the target element.</p>
+            <div class="edu-example">
+              <span class="ex-label">Visual Flow:</span>
+              <code class="mono-flow">Grandparent → Parent → Child Button</code>
+              <span class="ex-label">Execution Order:</span>
+              <code class="mono-order">Grandparent, Parent, Child</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="edu-table-wrapper">
+          <table class="edu-table">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Bubbling</th>
+                <th>Capturing</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Direction</td>
+                <td>Bottom → Top</td>
+                <td>Top → Bottom</td>
+              </tr>
+              <tr>
+                <td>Default</td>
+                <td>Yes</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td>Listener Syntax</td>
+                <td>addEventListener(type, fn)</td>
+                <td>addEventListener(type, fn, true)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="edu-note">
+          Bubbling is the default phase used by most applications. Event Delegation relies on Bubbling to efficiently handle events from dynamically created elements.
+        </div>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+
+      <div class="panel panel--attr">
+        <div class="panel-header">
+          <span class="panel-badge">Concepts</span>
+          <h3 class="panel-title">Attributes vs Properties</h3>
+        </div>
+        <p class="panel-desc">
+          Although they often look similar, Attributes and Properties behave differently inside the DOM.
+        </p>
+
+        <div class="edu-grid">
+          <div class="edu-card edu-card--attr">
+            <span class="edu-badge edu-badge--attr">Initial HTML State</span>
+            <h4>Attribute</h4>
+            <ul>
+              <li>Stored in HTML markup.</li>
+              <li>Represents the initial value.</li>
+              <li>Accessed using getAttribute() / setAttribute().</li>
+            </ul>
+            <div class="edu-example">
+              <span class="ex-label">HTML:</span>
+              <code>&lt;input value="Hello"&gt;</code>
+              <span class="ex-label">JavaScript:</span>
+              <code>input.getAttribute("value")</code>
+              <span class="ex-label">Result:</span>
+              <span class="ex-res ex-res--attr">"Hello"</span>
+            </div>
+          </div>
+
+          <div class="edu-card edu-card--prop">
+            <span class="edu-badge edu-badge--prop">Live DOM State</span>
+            <h4>Property</h4>
+            <ul>
+              <li>Stored in the DOM object.</li>
+              <li>Represents the current live value.</li>
+              <li>Changes immediately on user interaction.</li>
+            </ul>
+            <div class="edu-example">
+              <span class="ex-label">HTML:</span>
+              <code>&lt;input value="Hello"&gt;</code>
+              <span class="ex-label">User types:</span>
+              <code>"Hello World"</code>
+              <span class="ex-label">JavaScript:</span>
+              <code>input.value</code>
+              <span class="ex-label">Result:</span>
+              <span class="ex-res ex-res--prop">"Hello World"</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="edu-flow">
+          <span class="flow-step">HTML Attribute</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Browser Parses HTML</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">DOM Property</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">User Interaction</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Property Updates</span>
+        </div>
+
+        <div class="edu-note">
+          Attributes describe the initial configuration of an element. Properties represent the current state of that element in memory.
+        </div>
+
+        <div class="edu-playground">
+          <h5>Interactive Live Inspector</h5>
+          <p class="edu-play-desc">Type something in the Task Title field above, then inspect to see how they diverge.</p>
+          <button class="btn-secondary" id="inspect-btn">⟳ Inspect Input</button>
+          <div class="code-block" id="attr-output">
+            <div class="code-line">
+              <span class="code-key">input.value</span>
+              <span class="code-sep">→</span>
+              <span class="code-val" id="prop-val">—</span>
+            </div>
+            <div class="code-line">
+              <span class="code-key">getAttribute("value")</span>
+              <span class="code-sep">→</span>
+              <span class="code-val" id="attr-val">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <section class="pipeline-section">
+    <div class="pipeline-inner">
+      <div class="pipeline-heading">
+        <h2 class="pipeline-title">Browser Rendering Pipeline</h2>
+        <p class="pipeline-subtitle">
+          How your HTML &amp; CSS become pixels on screen — every step, visualised.
+        </p>
+      </div>
+
+      <div class="pipeline-diagram">
+
+        <div class="pipeline-paths">
+          <div class="pipe-path pipe-path--dom">
+            <div class="pipe-node pipe-node--source">
+              <span class="pipe-icon">&lt;/&gt;</span>
+              <span class="pipe-label">HTML Source</span>
+            </div>
+            <div class="pipe-arrow">↓</div>
+            <div class="pipe-node">
+              <span class="pipe-icon">⧉</span>
+              <span class="pipe-label">Parsing</span>
+              <span class="pipe-desc">Reads raw bytes, converts to characters</span>
+            </div>
+            <div class="pipe-arrow">↓</div>
+            <div class="pipe-node">
+              <span class="pipe-icon">◈</span>
+              <span class="pipe-label">Tokenization</span>
+              <span class="pipe-desc">Characters → start/end tags, attributes, text nodes</span>
+            </div>
+            <div class="pipe-arrow">↓</div>
+            <div class="pipe-node pipe-node--tree">
+              <span class="pipe-icon">🌲</span>
+              <span class="pipe-label">DOM Tree</span>
+              <span class="pipe-desc">Nested node objects with parent-child relationships</span>
+            </div>
+          </div>
+
+          <div class="pipeline-plus-between">＋</div>
+
+          <div class="pipe-path pipe-path--css">
+            <div class="pipe-node pipe-node--source pipe-node--css">
+              <span class="pipe-icon">🎨</span>
+              <span class="pipe-label">CSS Source</span>
+            </div>
+            <div class="pipe-arrow pipe-arrow--css">↓</div>
+            <div class="pipe-node pipe-node--css">
+              <span class="pipe-icon">⧉</span>
+              <span class="pipe-label">Parsing</span>
+              <span class="pipe-desc">Reads stylesheet bytes and characters</span>
+            </div>
+            <div class="pipe-arrow pipe-arrow--css">↓</div>
+            <div class="pipe-node pipe-node--css">
+              <span class="pipe-icon">◈</span>
+              <span class="pipe-label">Tokenization</span>
+              <span class="pipe-desc">Characters → selectors, properties, values</span>
+            </div>
+            <div class="pipe-arrow pipe-arrow--css">↓</div>
+            <div class="pipe-node pipe-node--tree pipe-node--css">
+              <span class="pipe-icon">🌿</span>
+              <span class="pipe-label">CSSOM Tree</span>
+              <span class="pipe-desc">Cascaded style rules mapped to each node</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-connector">
+          <div class="connector-line connector-line--left"></div>
+          <div class="connector-equal">＝</div>
+          <div class="connector-line connector-line--right"></div>
+        </div>
+
+        <div class="pipeline-output">
+          <div class="merge-node">
+            <span class="merge-icon">⊕</span>
+            <span class="merge-label">Render Tree</span>
+            <span class="merge-desc">Only visible nodes · inherits computed styles</span>
+          </div>
+          <div class="pipe-arrow">↓</div>
+          <div class="merge-node merge-node--layout">
+            <span class="merge-icon">⊞</span>
+            <span class="merge-label">Layout (Reflow)</span>
+            <span class="merge-desc">Calculates exact position &amp; size of each box</span>
+          </div>
+          <div class="pipe-arrow">↓</div>
+          <div class="merge-node merge-node--paint">
+            <span class="merge-icon">◉</span>
+            <span class="merge-label">Paint &amp; Composite</span>
+            <span class="merge-desc">Pixels drawn to screen layer by layer</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="concept-cards">
+        <div class="concept-card">
+          <span class="concept-num">01</span>
+          <h4 class="concept-name">Parsing</h4>
+          <p class="concept-body">The browser reads raw bytes from the network, converts them to characters using the
+            declared encoding (UTF-8), then feeds the character stream to the HTML parser.</p>
+        </div>
+        <div class="concept-card">
+          <span class="concept-num">02</span>
+          <h4 class="concept-name">Tokenization</h4>
+          <p class="concept-body">The HTML parser scans characters and emits tokens — StartTag, EndTag, Character,
+            DOCTYPE — using a state machine defined by the HTML5 specification.</p>
+        </div>
+        <div class="concept-card">
+          <span class="concept-num">03</span>
+          <h4 class="concept-name">DOM Tree</h4>
+          <p class="concept-body">Tokens are consumed by the tree construction stage, assembling a live in-memory tree
+            of Node objects: Document → Element → Text → Attribute.</p>
+        </div>
+        <div class="concept-card">
+          <span class="concept-num">04</span>
+          <h4 class="concept-name">CSSOM Tree</h4>
+          <p class="concept-body">CSS is also parsed into tokens and assembled into a tree of style rules. Cascade,
+            specificity, and inheritance are all resolved here before any layout occurs.</p>
+        </div>
+        <div class="concept-card">
+          <span class="concept-num">05</span>
+          <h4 class="concept-name">Render Tree</h4>
+          <p class="concept-body">DOM + CSSOM are merged. Only visible nodes survive (display:none is excluded). Each
+            surviving node carries its fully computed style, ready for geometry.</p>
+        </div>
+        <div class="concept-card">
+          <span class="concept-num">06</span>
+          <h4 class="concept-name">Layout &amp; Paint</h4>
+          <p class="concept-body">Layout (reflow) assigns exact coordinates to every box. Paint converts boxes into
+            pixel instructions. Compositor threads draw the layers to the GPU frame buffer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <template id="task-card-template">
+    <article class="task-card" data-id="" data-status="pending">
+      <div class="task-card-left">
+        <button class="task-action task-action--complete" data-action="complete" aria-label="Mark complete">
+          <span class="action-icon">○</span>
+        </button>
+      </div>
+      <div class="task-card-body">
+        <p class="task-title-text"></p>
+      </div>
+      <div class="task-card-right">
+        <button class="task-action task-action--edit" data-action="edit" aria-label="Edit task">UPDATE</button>
+        <button class="task-action task-action--delete" data-action="delete" aria-label="Delete task">DELETE</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
